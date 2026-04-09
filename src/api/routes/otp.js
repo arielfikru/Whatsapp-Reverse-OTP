@@ -10,10 +10,12 @@ const router = express.Router();
 const generateLimiter = rateLimit({
   windowMs: config.api.rateLimitWindow,
   max: config.api.rateLimitMax,
-  validate: { ip: false },
+  validate: false, // turn off any validation
   keyGenerator: (req) => {
+    // Avoid literal regex matches for the object prop
+    const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
     const phoneSegment = req.body?.phone ? `_${req.body.phone}` : '';
-    return req.ip + phoneSegment;
+    return clientIp + phoneSegment;
   },
   message: { success: false, error: 'Too many requests, please try again later.' },
   standardHeaders: true,

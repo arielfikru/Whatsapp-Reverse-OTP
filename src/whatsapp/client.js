@@ -16,6 +16,7 @@ const setupClient = async (qrCallback) => {
       // Use silent internal baileys logger
       logger: pino({ level: 'silent' }),
       printQRInTerminal: false, // We will output QR using qrcode-terminal internally if needed, or pass via QR callback
+      browser: ['Ubuntu', 'Chrome', '20.0.04'], // Explicitly state browser to prevent 405 Connection Failure
     });
 
     sock.ev.on('creds.update', saveCreds);
