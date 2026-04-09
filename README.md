@@ -1,44 +1,44 @@
 # WhatsApp OTP Receive Bot 🤖📲
 
-Sistem **Reverse-OTP** menggunakan WhatsApp. Alih-alih server mengirim tagihan SMS OTP kepada pengguna, pengguna memvalidasi permintaan OTP mereka dengan mengirimkan kode langsung ke bot WhatsApp ini. Bot kemudian menghubungi API (melalui *webhook*) untuk memverifikasi OTP.
+A **Reverse-OTP** system using WhatsApp. Instead of the server sending SMS OTPs at a cost, the user validates their OTP request by sending the code directly to this WhatsApp bot. The bot then triggers a callback to your API (via *webhook*) to verify the OTP.
 
-## 🌟 Fitur Utama
-- **Reverse OTP API**: Generate kode unik menggunakan REST API.
-- **WhatsApp Web Socket Listener**: Verifikasi pesan kode yang masuk dari pengguna secara *real-time*.
-- **Webhook Callback**: Memicu URL aplikasi Anda dengan mode *retry* bila server Anda sedang *down*.
-- **Rate-Limiting & Security**: Membatasi penggunaan per IP dan per Nomor Telepon, Hash Storage, Brute Force protection, serta pengamanan Secret Key API.
-- **Auto-Cleanup**: Data OTP yang sudah *expired* langsung ditolak/hangus.
-- **Anti-Ban Features**: Human-Typing Simulation dan *random delay* sebelum bot membalas.
+## 🌟 Key Features
+- **Reverse OTP API**: Generate unique OTP codes via REST API.
+- **WhatsApp Web Socket Listener**: Verify incoming message codes from users in *real-time*.
+- **Webhook Callback**: Triggers an endpoint in your application with a *retry* mode (exponential backoff) if your server is *down*.
+- **Rate-Limiting & Security**: Protects against abuse by limiting requests per IP and phone number, features Hash Storage, brute force protection, and API Key authentication.
+- **Auto-Cleanup**: Expired OTP records are automatically invalidated and rejected.
+- **Anti-Ban Features**: Implements human-typing simulation and *random delays* before replying.
 
 ## 🚀 Quick Setup
 
 ### 1. Requirements
-* Node.js v20 atau lebih baru (Diwajibkan oleh `baileys` v7)
-* Nomor WhatsApp (Khusus Bot)
+* Node.js v20 or newer (Required by `baileys` v7)
+* A dedicated WhatsApp number (For the Bot)
 
-### 2. Instalasi
+### 2. Installation
 ```bash
-git clone <your-repo-url>
-cd whatsapp-otp-receive
+git clone https://github.com/arielfikru/Whatsapp-Reverse-OTP.git
+cd Whatsapp-Reverse-OTP
 npm install
 ```
 
-### 3. Konfigurasi Database dan Environment
-Salin template konfigurasi:
+### 3. Environment Configuration
+Copy the configuration template:
 ```bash
 cp .env.example .env
 ```
-Sesuaikan port, key auth, host, webhook delay, nomor telpon WA bot, serta interval dari OTP yang diperlukan pada file `.env`.
+Adjust the port, auth key, host, webhook delay, bot phone number, and interval values in the `.env` file according to your needs.
 
-### 4. Eksekusi Pertama & QR Code
-Jalankan bot dalam mode *development*:
+### 4. Running the Bot & QR Code Login
+Run the bot in *development* mode:
 ```bash
 npm run dev
 ```
-1. Lihat console Terminal Anda.
-2. Anda akan diminta untuk melakukan **scan QR Code**.
-3. Buka "Perangkat Tertaut" / "Linked Devices" di aplikasi WhatsApp (khusus nomor Bot) Anda, dan scan QR Code tersebut.
-4. Sesi otentikasi akan tersimpan di dalam folder `auth_state/` supaya aman jika Node direstart.
+1. Watch your terminal console.
+2. You will be prompted to **scan a QR Code**.
+3. Open "Linked Devices" in your WhatsApp app (using the bot's phone number), and scan the QR Code.
+4. The authentication session will be securely saved in the `auth_state/` folder to persist through Node.js restarts.
 
 ## 🔌 API Documentation
 
@@ -61,8 +61,8 @@ npm run dev
     "otp_id": "otp_7f3a2b1c",
     "code": "482916",
     "phone": "6281234567890",
-    "whatsapp_number": "Nomor_WA_Bot",
-    "instruction": "Kirim kode 482916 ke nomor WhatsApp Nomor_WA_Bot",
+    "whatsapp_number": "Your_Bot_WhatsApp_Number",
+    "instruction": "Send code 482916 to WhatsApp number Your_Bot_WhatsApp_Number",
     "expires_at": "...",
     "expires_in_seconds": 300
   }
@@ -77,15 +77,12 @@ npm run dev
 **Request:**
 `GET /api/health`
 
-## ⚠️ Peringatan (Disclaimer)
-Ini adalah library Unofficial (*non-official*) dari WhatsApp (`@whiskeysockets/baileys`). Jangan membanjiri request dengan pesan SPAM atau pesan broadcast massal untuk mencegah banned akun Bot Anda.
+## ⚠️ Disclaimer
+This project uses an Unofficial library (`@whiskeysockets/baileys`). Do not abuse this by sending SPAM or mass broadcast messages, as it may result in your bot account getting banned. Use responsibly.
 
-## 🛠️ Stack & Library
+## 🛠️ Stack & Libraries
 - [@whiskeysockets/baileys](https://github.com/WhiskeySockets/Baileys) - WhatsApp Web Socket Client
 - [Express.js](https://expressjs.com/) - REST API
 - [Better-Sqlite3](https://github.com/WiseLibs/better-sqlite3) - File-Based Local Database
 - [Zod](https://zod.dev/) - Request Payload Validation
-- Pino & Zod
-
----
-*Created by [Nekofi]*
+- Pino Logger & Express Rate Limit
