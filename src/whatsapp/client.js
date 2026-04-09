@@ -1,4 +1,4 @@
-const { makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
+const { makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, Browsers } = require('@whiskeysockets/baileys');
 const pino = require('pino'); // Baileys prefers pino internally as well
 const config = require('../config/env');
 const logger = require('../utils/logger');
@@ -9,14 +9,17 @@ let sock;
 
 const setupClient = async (qrCallback) => {
   const { state, saveCreds } = await useMultiFileAuthState(config.whatsapp.authDir);
+  const { version, isLatest } = await fetchLatestBaileysVersion();
+  logger.info(`Using WhatsApp v${version.join('.')}, isLatest: ${isLatest}`);
 
   const startSock = () => {
     sock = makeWASocket({
+      version,
       auth: state,
       // Use silent internal baileys logger
       logger: pino({ level: 'silent' }),
       printQRInTerminal: false, // We will output QR using qrcode-terminal internally if needed, or pass via QR callback
-      browser: ['Ubuntu', 'Chrome', '20.0.04'], // Explicitly state browser to prevent 405 Connection Failure
+      browser: Browsers.macOS('Desktop'), // Explicitly state browser to prevent 405 Connection Failure
     });
 
     sock.ev.on('creds.update', saveCreds);
