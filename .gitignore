@@ -1,0 +1,11 @@
+node_modules/
+.env
+auth_state/
+data/
+logs/
+PROJECT.md
+.DS_Store
+*.log
+coverage/
+.npm
+package-lock.json
