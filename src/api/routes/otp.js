@@ -10,6 +10,7 @@ const router = express.Router();
 const generateLimiter = rateLimit({
   windowMs: config.api.rateLimitWindow,
   max: config.api.rateLimitMax,
+  validate: { ip: false },
   keyGenerator: (req) => {
     const phoneSegment = req.body?.phone ? `_${req.body.phone}` : '';
     return req.ip + phoneSegment;

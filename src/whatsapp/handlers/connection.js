@@ -17,7 +17,10 @@ const handleConnectionUpdate = (update, makeWASocket, qrCallback) => {
   if (connection === 'close') {
     connectionStatus = 'disconnected';
     const shouldReconnect = (lastDisconnect?.error)?.output?.statusCode !== 401; // 401 means logged out
-    logger.warn('WhatsApp connection closed due to', lastDisconnect?.error, ', reconnecting:', shouldReconnect);
+    logger.warn(
+      { error: lastDisconnect?.error, shouldReconnect },
+      'WhatsApp connection closed'
+    );
     
     if (shouldReconnect) {
       connectionStatus = 'connecting';
